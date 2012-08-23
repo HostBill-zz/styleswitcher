@@ -5,7 +5,7 @@ require_once APPDIR_MODULES . 'Other' . DS . 'styleswitcher' . DS . 'lessphp' . 
 /**
  * BootStrap StyleSwitcher - plugin module for hostbill that allows admin to change clientarea
  * style colors without modifying any files
- * @author Kris Pajak @ HostBill
+ * @author Kris Pajak 
  */
 class StyleSwitcher extends OtherModule implements Observer {
 
@@ -42,7 +42,7 @@ class StyleSwitcher extends OtherModule implements Observer {
   
 
     protected $modname = 'NextGen theme Style Switcher';
-    protected $version = '1.0';
+    protected $version = '1.3';
     protected $description = 'NextGen theme (BootStrap) StyleSwitcher - plugin module for hostbill that allows admin to change clientarea style colors without modifying any files';
     /**
      * @var SimpleDB 
@@ -57,6 +57,11 @@ class StyleSwitcher extends OtherModule implements Observer {
         $this->_header();
     }
 
+    public function upgrade($previous) {
+        if($previous==1) {
+            $this->db->exec("ALTER TABLE `hb_mod_styles` CHANGE `content` `content` LONGTEXT NOT NULL ");
+        }
+    }
     /**
      * Create table to keep stored styles & properties
      */
@@ -68,7 +73,7 @@ class StyleSwitcher extends OtherModule implements Observer {
                 `name` VARCHAR (127) NOT NULL DEFAULT '',
                 `modified` VARCHAR(127) NOT NULL DEFAULT '',
                 `variables` TEXT NOT NULL,
-                `content` TEXT NOT NULL,
+                `content` LONGTEXT NOT NULL,
                     PRIMARY KEY (`id`),
                     INDEX (`enabled`)
                 ) DEFAULT CHARACTER SET utf8 ENGINE=InnoDB;
